@@ -1,0 +1,29 @@
+import heapq
+def prim(graph):
+    selected_vertices = set()
+    start_vertex = list(graph.keys())[0]
+    priority_queue = [(weight, start_vertex, neighbor) for neighbor, weight in graph[start_vertex].items()]
+    heapq.heapify(priority_queue)
+    minimum_spanning_tree = set()
+    selected_vertices.add(start_vertex)
+    while priority_queue:
+        weight, vertex1, vertex2 = heapq.heappop(priority_queue)
+        if vertex1 in selected_vertices and vertex2 in selected_vertices:
+            continue
+        minimum_spanning_tree.add((vertex1, vertex2, weight))
+        selected_vertices.add(vertex2)
+        for neighbor, weight in graph[vertex2].items():
+            if neighbor not in selected_vertices:
+                heapq.heappush(priority_queue, (weight, vertex2, neighbor))
+    return minimum_spanning_tree
+graph = {
+    'A': {'B': 4, 'D': 2},
+    'B': {'A': 1, 'D': 6, 'E': 4},
+    'C': {'E': 5},
+    'D': {'A': 3, 'B': 2, 'E': 1},
+    'E': {'B': 1, 'C': 1, 'D': 2}
+}
+minimum_spanning_tree = prim(graph)
+print("Minimum Spanning Tree:")
+for edge in minimum_spanning_tree:
+    print(edge)
